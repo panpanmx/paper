@@ -103,7 +103,7 @@ To overcome these walls simultaneously, we present a full-stack co-design spanni
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.64\textwidth]{fig1_arch_overview.pdf}
+    \includegraphics[width=0.68\textwidth]{fig1_arch_overview.pdf}
     \caption{MT-3000 multi-zone heterogeneous node architecture, four-tier software-managed explicit memory hierarchy, and mapping of our end-to-end hierarchical ZGEMM co-design across the 16-core ARMv8 GP Zone and four autonomous 24-core DSP clusters in the ACC Zone.}
     \label{fig:arch}
 \end{figure*}
@@ -177,7 +177,7 @@ However, for a complex tile $(M_b, K_b, N_b)$ buffered inside a core's $64$~KB S
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.64\textwidth]{fig2_2d_comm_timeline.pdf}
+    \includegraphics[width=0.68\textwidth]{fig2_2d_comm_timeline.pdf}
     \caption{Proposed Stationary-$A$, Panel-Broadcast-$B$ 2D hybrid orchestration ($P/2 \times 2$): (a) zero-copy strided \texttt{MPI\_Type\_vector} dispatch of $B$ panels, zero-communication offset-addressed parallel \texttt{pread} of $A$ slices, disjoint $C_{r,g}$ ownership without reduction, and 64-column vector-aligned 24-core partitioning; (b) asynchronous execution timeline contrasting the 512-node 1D communication storm against our two-phase overlapped pipeline.}
     \label{fig:comm2d}
 \end{figure*}
@@ -290,7 +290,7 @@ Equation~\eqref{eq:chunk64} also yields a closed-form proof for why \textbf{$G =
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.64\textwidth]{fig3_tri_pipeline_microkernel.pdf}
+    \includegraphics[width=0.68\textwidth]{fig3_tri_pipeline_microkernel.pdf}
     \caption{Intra-chip scratchpad and register co-design: (a) 14-channel asynchronous P2P DMA space-time pipeline nesting inner-tier $A/B$ ping-pong double buffering (\texttt{ch1..ch8}) inside middle-tier $C$-matrix cyclic triple buffering (\texttt{chc1..chc6}); (b) $4 \times 4$ vector-register-resident outer-product dual-FMA micro-kernel pinning 32 physical vector accumulators to eliminate $86.1\%$ of Array Memory vector load/store traffic.}
     \label{fig:microkernel}
 \end{figure*}
@@ -438,7 +438,7 @@ $16{,}384^{\dagger}$ & \textbf{49.16} & 7.20 & OOM & $6.83\times$ / --- & \textb
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.64\textwidth]{fig4_intra_node_openblas.pdf}
+    \includegraphics[width=0.68\textwidth]{fig4_intra_node_openblas.pdf}
     \caption{Intra-node evaluation across $N = 512$ to $16384$: (a) single-core throughput and speedup of 1 MT-3000 DSP core over 1-core ARMv8 OpenBLAS (\texttt{1x ZGEMM} and \texttt{4x DGEMM}); (b) 1 DSP cluster (24 cores, $1/4$ node ACC Zone) vs.\ 4-core (cluster-equivalent) and full 16-core ARMv8 OpenBLAS relative to the $240.5$~GFLOPS DDR4 DMA Roofline; (c) element-wise maximum absolute error ($\ell_\infty$) scaling linearly as $\mathcal{O}(K \epsilon_{\mathrm{FP64}})$.}
     \label{fig:intra_node}
 \end{figure*}
@@ -471,7 +471,7 @@ $16\text{K}^{\ddagger}$ & --- & --- & --- & --- & --- & --- & --- & 838.03 & \te
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\columnwidth]{fig5_roofline_model.pdf}
+    \includegraphics[width=0.82\columnwidth]{fig5_roofline_model.pdf}
     \caption{Empirical Roofline validation on an MT-3000 DSP cluster ($16.22$~GB/s DDR4 DMA ceiling, $76.8$~GFLOPS 1-core and $1{,}843.2$~GFLOPS 24-core FMA peaks), showing 1-core efficiency ($64.1\%$), 24-core saturation ($243.44$~GFLOPS), and 512-node strong-scaling operating points across 1D $8\text{K}$ ($44.8$~TF/s), 2D $8\text{K}$ ($89.9$~TF/s), and 2D $16\text{K}$ ($218.8$~TF/s).}
     \label{fig:roofline}
 \end{figure}
@@ -509,14 +509,14 @@ $16\text{K}^{\ddagger}$ & --- & --- & --- & --- & --- & --- & --- & 838.03 & \te
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.44\textwidth]{fig6_strong_scaling_512nodes.pdf}
+    \includegraphics[width=0.58\textwidth]{fig6_strong_scaling_512nodes.pdf}
     \caption{Strong-scaling evaluation of $8192^3$ complex GEMM across 1 to 512 MT-3000 supercomputer nodes (4 to 2,048 MPI ranks; 96 to 49,152 DSP cores): (a) aggregate DSP kernel throughput showing the 1D DDR-streaming floor ($44.78$~TFLOPS) vs.\ our 2D hybrid breakthrough ($89.92$~TFLOPS, $2.01\times$); (b) kernel strong-scaling parallel efficiency; (c) elimination of the 512-node $102.25$~s MPI broadcast storm ($9.90\times$ comm speedup, $9.86\times$ E2E speedup); (d) member sliced parallel \texttt{pread} latency ($93.5\times$ speedup at 128 nodes) and leader communication-I/O overlap ($82.5\%$ I/O hidden at 64 nodes).}
     \label{fig:strong_scaling}
 \end{figure*}
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.63\textwidth]{fig7_ablation_extreme_weak.pdf}
+    \includegraphics[width=0.68\textwidth]{fig7_ablation_extreme_weak.pdf}
     \caption{Micro-architectural ablation and extreme-scale evaluation up to 512 nodes (49,152 DSP cores): (a) single/double/tri-buffered scratchpad DMA ablation reaching $956.17$~GFLOPS/node and $1.42\times$ 1-core async speedup; (b) extreme-scale $16384^3$ ($35.184$~TFLOPs) vs.\ $8192^3$ strong scaling achieving $218.79$~TFLOPS ($222.49\times$ speedup) and $112.80\%$ 2-node superlinear efficiency; (c) 1--512 node weak-scaling efficiency sustaining $92.21\%$ ($67.24$~TFLOPS, $+2.77\%$ over double buffering) at 49,152 DSP cores.}
     \label{fig:ablation_extreme_weak}
 \end{figure*}
@@ -561,20 +561,18 @@ Table~\ref{tab:strong_scaling} and Fig.~\ref{fig:ablation_extreme_weak}(c) evalu
 % ============================================================================
 \section{Related Work}
 \label{sec:related}
-% ============================================================================
-\textbf{Dense and Complex BLAS Micro-Kernels:} CPU GEMM libraries---ATLAS~\cite{whaley2001atlas}, GotoBLAS~\cite{goto2008anatomy}, OpenBLAS~\cite{zhang2012openblas}, and BLIS~\cite{vanzee2015blis}---rely on hierarchical cache-blocking and register-resident micro-kernels tailored to hardware caches, including 3M/4M complex GEMM in BLIS~\cite{vanzee2017complex}. Unlike cache-coherent CPUs, MT-3000 DSP cores expose bare-metal $64$~KB SM and $768$~KB AM scratchpads without hardware cache refill, requiring explicit 14-channel DMA triple/double buffering alongside split-complex hoisted-negation \texttt{vec\_svbcast} FMA scheduling.
+\textbf{Dense BLAS and Complex Micro-Kernels:} Standard libraries (ATLAS~\cite{whaley2001atlas}, OpenBLAS~\cite{zhang2012openblas}, BLIS~\cite{vanzee2015blis, vanzee2017complex}) optimize multi-level cache hierarchies. In contrast, MT-3000 DSP cores feature non-coherent SPMs without cache refill, requiring explicit 14-channel DMA double/triple buffering and hoisted-negation SPU-vector dual-issue FMA pipelines.
 
-\textbf{Scratchpad Many-Core and MT-3000 Optimizations:} Software-managed DMA double buffering was pioneered on IBM Cell BE~\cite{kahle2005cell}, TI C6678 DSPs~\cite{igual2012dsp}, and Sunway SW26010~\cite{fu2016sunway, jiang2017sw26010}. On MT-3000, Lu~\emph{et~al.}~\cite{lu2022mt3000} introduced the multi-zone architecture, Li~\emph{et~al.}~\cite{li2024md} ported molecular dynamics kernels, Fang~\emph{et~al.}~\cite{fang2026mtgemm} developed \texttt{mtGEMM} for single-cluster real DGEMM, Mo~\emph{et~al.}~\cite{mo2024irregular} studied irregular single-cluster GEMM, and Qi~\emph{et~al.}~\cite{qi2025constraint, qi2026attention} explored single-cluster auto-tuning for real GEMM-like and attention operators. None address FP64 \emph{complex} GEMM, $C$-matrix cyclic triple buffering, or \emph{multi-node strong/weak scaling} across tens of thousands of DSPs.
+\textbf{Scratchpad Many-Core Architectures:} Software-managed DMA buffering was studied on Cell BE~\cite{kahle2005cell}, TI C6678~\cite{igual2012dsp}, and Sunway SW26010~\cite{fu2016sunway, jiang2017sw26010}. Prior MT-3000 studies focused on single-node real DGEMM or attention operators~\cite{lu2022mt3000, li2024md, fang2026mtgemm, mo2024irregular, qi2025constraint, qi2026attention}. None address split-complex ZGEMM, cyclic $C$-tile triple buffering, or multi-node scaling across $49{,}152$ DSP cores.
 
-\textbf{Distributed GEMM and Collective Algorithms:} ScaLAPACK~\cite{choi1996scalapack}, SUMMA~\cite{vandegeijn1997summa}, 2.5D GEMM~\cite{solomonik2011comm25d}, COSMA~\cite{kwasniewski2019cosma}, and SLATE~\cite{gates2019slate} optimize communication on homogeneous CPU/GPU grids, while MPICH~\cite{thakur2005mpich} and hierarchical collectives~\cite{parsons2014hierarchical} optimize tree topologies. Our Stationary-$A$, Panel-Broadcast-$B$ 2D co-design uniquely couples zero-copy strided \texttt{MPI\_Type\_vector} subgroup collectives with parallel POSIX \texttt{pread} into DSP-pinned memory and 64-column SIMD alignment to suppress 2,048-rank storms and halve the DDR floor.
+\textbf{Distributed Collectives and GEMM Topologies:} Distributed GEMM frameworks (ScaLAPACK~\cite{choi1996scalapack}, SUMMA~\cite{vandegeijn1997summa}, 2.5D GEMM~\cite{solomonik2011comm25d}, COSMA~\cite{kwasniewski2019cosma}, SLATE~\cite{gates2019slate}) target cache-based CPU/GPU systems. Our work combines committed strided datatypes, subgroup collectives, concurrent \texttt{pread}, and 64-column alignment to overcome broadcast contention and the off-chip streaming floor.
 
-% ============================================================================
 \section{Discussion and Conclusion}
 \label{sec:conclusion}
 % ============================================================================
 \textbf{Portability Beyond $N=16384$:} Our co-design generalizes directly to broader multi-zone scratchpad accelerators (e.g., Sunway SW26010-Pro, multi-cluster DSPs, and spatial dataflow tiles). The constraint $N/G \ge 24 \times 3 N_b = 4{,}608$ ($Q \ge 64$) governs optimal panel count $G$: while $G=2$ is optimal at $N=8192$ and reaches $218.79$~TFLOPS at $N=16384$, $N \ge 32768$ permits $G \in \{8, 16\}$, cutting subgroup broadcast payloads and the DDR floor~\eqref{eq:ddr_floor} by $8\times$--$16\times$, while node-level shared-memory I/O leaders can curb Lustre contention above $1{,}024$ readers.
 
-\textbf{Conclusion:} We presented an end-to-end hierarchical co-design for distributed FP64 complex GEMM on MT-3000 supercomputers. Uniting a 14-channel asynchronous DMA tri-buffered scratchpad pipeline and a $4 \times 4$ 32-VR dual-FMA micro-kernel ($86.1\%$ AM vector traffic cut) with Stationary-$A$, Panel-Broadcast-$B$ 2D collectives and parallel \texttt{pread} achieves $49.19$~GFLOPS/core ($1.42\times$ async DMA speedup; $6.12\times$--$7.28\times$ over 1-core OpenBLAS), saturates $\sim\!100\%$ of the $240.5$~GFLOPS cluster DDR4 Roofline ($243.44$~GFLOPS/cluster, $956.17$~GFLOPS/node), cuts 512-node collective time by $9.90\times$ ($102.25 \to 10.32$~s), reaches $89.92$~TFLOPS ($8192^3$) and $218.79$~TFLOPS ($16384^3$, $222.49\times$ speedup), and sustains $92.21\%$ weak-scaling efficiency across 512 nodes (49,152 DSPs).
+\textbf{Conclusion:} We presented an end-to-end co-design for distributed FP64 complex GEMM on MT-3000 supercomputers. By uniting a 14-channel asynchronous DMA tri-buffered pipeline and a $4 \times 4$ 32-VR micro-kernel ($86.1\%$ AM traffic reduction) with Stationary-$A$, Panel-Broadcast-$B$ 2D collectives and overlapped parallel \texttt{pread}, our framework achieves $49.19$~GFLOPS/core ($1.42\times$ async speedup; $6.12\times$--$7.28\times$ over OpenBLAS), saturates $\sim\!100\%$ of the cluster DDR4 Roofline ($243.44$~GFLOPS/cluster, $956.17$~GFLOPS/node), reduces 512-node collective time by $9.90\times$ ($102.25 \to 10.32$~s), delivers $89.92$~TFLOPS ($8192^3$) and $218.79$~TFLOPS ($16384^3$, $222.49\times$ speedup), and maintains $92.21\%$ weak-scaling efficiency at 512 nodes ($49{,}152$ DSP cores).
 
 \clearpage
 \IEEEtriggeratref{14}
