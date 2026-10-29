@@ -1,0 +1,9 @@
+# Protect binary deliverables from CRLF line-ending normalization on Windows
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.xlsx binary
+*.dat binary
+*.so binary
+*.so.* binary
