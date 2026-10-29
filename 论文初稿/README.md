@@ -2,6 +2,8 @@
 
 本目录包含面向计算机体系结构与高性能计算一流会议（**SC / IEEE IPDPS / IEEE CLUSTER / ICPP**）及一流期刊（**IEEE TPDS / IEEE TC**）标准打造、可直接提交（Direct-Submission Ready）的完整 LaTeX 论文工程、矢量图表生成脚本与已编译并通过 **IEEE PDF eXpress** 字体/版式审计的 PDF 成稿。
 
+> **AI Agent 协作提示**：修改本目录下的 `.tex`、`generate_figures.py` 或 `references.bib` 前，请先阅读仓库根目录的 [`../AGENTS.md`](../AGENTS.md)、[`../DECISIONS.md`](../DECISIONS.md) 与 [`../VERIFICATION.md`](../VERIFICATION.md)，严格遵守双版本同步、会议版 **10.0 页正文红线**及零警告/零 Type-3 字体门禁。
+
 ---
 
 ## 1. 交付文件清单

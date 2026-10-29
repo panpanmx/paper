@@ -35,6 +35,10 @@
 │       └── IEEE-conference-template-062824.pdf  # 格式参考 PDF
 │
 ├── 实验结果.xlsx              # 1~512 节点（96~49,152 DSP 核）全套实测原始数据（8192/16384 强扩展、弱扩展、DMA 缓冲消融、I/O 与单核/簇级基准）
+├── AGENTS.md                  # ★ AI Agent 运行手册：仓库全局上下文索引、不可违背红线约束与标准构建命令
+├── DECISIONS.md               # ★ 架构与论文决策记录 (ADR-001 ~ ADR-008)：硬件建模、分块/对齐定理与双版本排版规范
+├── VERIFICATION.md            # ★ 自动化核验准入套件：图表生成、双盲/定稿四模式零警告编译、PDF 字体与实测指标核查表
+├── ROADMAP.md                 # ★ 项目里程碑 (M1~M5) 与后续演进路线图 (R1~R5：自适应 2.5D 分组、GSM 协同预取、AE 复现包)
 ├── .gitignore                 # Git 忽略配置（已过滤 LaTeX 编译临时文件与大二进制文件）
 └── README.md                  # 本全局导航文档
 ```
@@ -55,3 +59,31 @@
      * **$N=8192$ 强扩展**：彻底消除 1D 全局广播风暴，将通信时间由 102.25 s 降至 **10.32 s（$9.90\times$ 加速，端到端总时间加速 $9.86\times$）**，并将内核聚合吞吐率从 1D 基线的 44.78 TFLOPS 翻倍提升至 **89.92 TFLOPS（0.0489 s，较 1 节点提速 $118.20\times$，较 1D 基线提速 $2.01\times$）**；
      * **$N=16384$（35.184 TFLOPs）极限规模强扩展**：在 2 节点实现 **112.80% 超线性并行效率（$2.256\times$）**，256 节点达 **166.82 TFLOPS（66.26% 效率）**，512 节点聚合算力突破至 **218.79 TFLOPS（0.1608 s，$222.49\times$ 加速，达 $8192^3$ 规模的 $2.43\times$）**，与理论推导的 DDR 流式下界定理（预测 212.3 TFLOPS，误差 **2.9%**）精确吻合，同时 4.30 GB $B$ 面板组播全程无风暴、成员并行 `pread` 仅耗时 **0.1117–0.1235 s（$37.9\times$ 加速）**；
      * **1–512 节点多粒度等颗粒度弱扩展**：在单节点 $2048^3$ 基准下扩展至 512 节点（总工作量 35.184 TFLOPs），三级流水线内核 `pipeline_opt` 维持 **92.21% 弱扩展并行效率（67.24 TFLOPS，0.5233 s）**，并凭借循环 $C$ 分块流水吸收集群内存干扰，在 512 节点规模上较纯双缓冲 `d_opt`（89.64%）进一步提升 **+2.57 个百分点（吞吐 +2.77%）**。
+
+---
+
+## 3. AI Agent 友好协作与自动化核验套件（Agent Harness）
+
+为支持 AI 编程/科研智能体（Antigravity、Claude Code、Codex、Cursor 等）与人类协作者零幻觉、高可靠地维护代码库与双版本论文，仓库根目录内置了完整的结构化 Harness 文档体系：
+
+| Harness 文档 | 核心职责与适用场景 |
+| :--- | :--- |
+| **[`AGENTS.md`](AGENTS.md)** | **智能体首要入口手册**：定义权威数据源映射表（Single Source of Truth）、6 条硬性护栏红线（零虚构数据、MT-3000 单芯片多域权威架构术语、64 元素向量对齐与片上容量上界、会议版 **10.0 页正文硬红线**、双版本同步、分支保护）以及标准构建脚本。 |
+| **[`DECISIONS.md`](DECISIONS.md)** | **架构与手稿决策日志（`ADR-001`–`ADR-008`）**：记录实虚分离平面布局、$(56,32,64)$ 非对称分块与 32 寄存器驻留、14 通道混合缓冲抗抖动、$P/2 \times 2$ 对齐唯一性定理、零拷贝 `MPI_Type_vector` + `pread` 重叠、$N=16384$ 1–4 节点内存初始化协议及双版本排版决策的推导依据。 |
+| **[`VERIFICATION.md`](VERIFICATION.md)** | **可执行质量门禁（Gate 1–Gate 4）**：提供一键复现 7 张矢量图 Type-42 字体检查、会议版/期刊版 $\times$ 双盲/定稿四模式零警告编译检查、300-DPI 视觉防遮挡审计，以及与 `实验结果.xlsx` / `openblas_vs_asd.log` 逐项锚定的核心指标核对表。 |
+| **[`ROADMAP.md`](ROADMAP.md)** | **里程碑与后续演进路线图**：汇总已交付的 `M1`–`M5` 里程碑，并规划 `R1`（$N \ge 16384$ 自适应 $G \in \{2,4,8\}$ 列分组与 2.5D SUMMA）、`R2`（片上 `GSM`/`HBSM` 核间协同预取与任意维度免补零尾块）、`R3`（混合精度与分布式复数矩阵分解）、`R4`（CI 自动编译门禁）与 `R5`（顶会/顶刊 AE 复现徽章包）。 |
+
+---
+
+## 4. 快速复现与编译命令
+
+```powershell
+# 1. 从实测原始数据一键生成全部 7 张出版级矢量 PDF 图表 (fig1..fig7.pdf)
+python "论文初稿\generate_figures.py"
+
+# 2. 编译 IEEE 顶级会议版 (10.0 页技术正文 + 第 11 页均衡参考文献) 与 IEEE Transactions 期刊版
+Push-Location "论文初稿"
+pdflatex -interaction=nonstopmode paper_conference.tex; bibtex paper_conference; pdflatex -interaction=nonstopmode paper_conference.tex; pdflatex -interaction=nonstopmode paper_conference.tex
+pdflatex -interaction=nonstopmode bare_jrnl_new_sample4.tex; bibtex bare_jrnl_new_sample4; pdflatex -interaction=nonstopmode bare_jrnl_new_sample4.tex; pdflatex -interaction=nonstopmode bare_jrnl_new_sample4.tex
+Pop-Location
+```
