@@ -1,6 +1,6 @@
 # 基于 MT-3000 多域异构超算的高性能分布式复数 GEMM 研究与直接投稿论文工程
 
-本项目面向国产天河 **MT-3000** 多域异构超算处理器（16 核 ARMv8 通用主控域 GP Zone + 4 簇 $\times$ 24 核自主 VLIW/SIMD DSP 矩阵加速域 ACC Zone），包含大规模高性能分布式双精度复数矩阵乘法（`ZGEMM`）的跨层软硬件协同优化实现、工业级 OpenBLAS 对比基准测试套件，以及面向计算机体系结构与高性能计算顶级会议（**SC / IEEE IPDPS / IEEE CLUSTER / ICPP**）和顶级期刊（**IEEE TPDS / IEEE TC**）标准的**可直接提交（Direct-Submission Ready）LaTeX 论文工程**。
+本项目面向国产天河 **MT-3000** 多域异构超算处理器（16 核 ARMv8 通用主控域 GP Zone + 4 簇 $\times$ 24 核自主 VLIW/SIMD DSP 矩阵加速域 ACC Zone），包含大规模高性能分布式双精度复数矩阵乘法（`ZGEMM`）的跨层软硬件协同优化实现、工业级 OpenBLAS 对比基准测试套件，以及面向计算机体系结构、EDA 与高性能计算顶级会议（**ACM/IEEE DAC / SC / IEEE IPDPS / IEEE CLUSTER / ICPP**）和顶级期刊（**IEEE TPDS / IEEE TC**）标准的**可直接提交（Direct-Submission Ready）LaTeX 论文工程**。
 
 ---
 
@@ -16,10 +16,12 @@
 │   ├── include/               # 项目公共头文件
 │   └── bin/                   # 集群运行调度与批处理评测脚本
 │
-├── 论文初稿/                  # 学术论文直接投稿主工程（双版本齐备，0 Warning / 0 Type-3 字体）
+├── 论文初稿/                  # 学术论文直接投稿主工程（三版本齐备，0 Warning / 0 Type-3 字体）
 │   ├── README.md                     # 投稿模式切换、一键编译与源码-图表核验指南
-│   ├── paper_conference.tex          # IEEE 顶级会议直接投稿版主源文件 ([conference]，默认双盲匿名)
+│   ├── paper_conference.tex          # IEEE 顶级会议直接投稿版主源文件 ([conference]，默认双盲匿名，10+1 页)
 │   ├── paper_conference.pdf          # 已编译会议版 PDF（10 页技术正文 + 第 11 页均衡参考文献）
+│   ├── paper_dac.tex                 # ACM/IEEE DAC 顶级会议直接投稿版主源文件 (严格 6 页正文 + 1 页纯参考文献)
+│   ├── paper_dac.pdf                 # 已编译 DAC 版 PDF（6.0 页完整技术正文 + 第 7 页独立纯参考文献）
 │   ├── bare_jrnl_new_sample4.tex     # IEEE Transactions 顶级期刊直接投稿版主源文件 ([journal])
 │   ├── bare_jrnl_new_sample4.pdf     # 已编译期刊版 PDF（IEEE TPDS / IEEE TC 格式，双栏均衡）
 │   ├── bare_jrnl_new_sample4_v2.txt  # 与期刊版主源文件完全同步的纯文本备份

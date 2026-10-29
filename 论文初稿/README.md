@@ -1,8 +1,8 @@
-# 学术论文直接投稿套件（IEEE Conference & IEEE Transactions 双版本）
+# 学术论文直接投稿套件（IEEE Conference, IEEE Transactions & ACM/IEEE DAC 三版本）
 
-本目录包含面向计算机体系结构与高性能计算一流会议（**SC / IEEE IPDPS / IEEE CLUSTER / ICPP**）及一流期刊（**IEEE TPDS / IEEE TC**）标准打造、可直接提交（Direct-Submission Ready）的完整 LaTeX 论文工程、矢量图表生成脚本与已编译并通过 **IEEE PDF eXpress** 字体/版式审计的 PDF 成稿。
+本目录包含面向计算机体系结构与高性能计算一流会议（**SC / IEEE IPDPS / IEEE CLUSTER / ICPP**）、EDA 与芯片体系结构顶级会议（**ACM/IEEE DAC**）及一流期刊（**IEEE TPDS / IEEE TC**）标准打造、可直接提交（Direct-Submission Ready）的完整 LaTeX 论文工程、矢量图表生成脚本与已编译并通过 **IEEE PDF eXpress** 字体/版式审计的 PDF 成稿。
 
-> **AI Agent 协作提示**：修改本目录下的 `.tex`、`generate_figures.py` 或 `references.bib` 前，请先阅读仓库根目录的 [`../AGENTS.md`](../AGENTS.md)、[`../DECISIONS.md`](../DECISIONS.md) 与 [`../VERIFICATION.md`](../VERIFICATION.md)，严格遵守双版本同步、会议版 **10.0 页正文红线**及零警告/零 Type-3 字体门禁。
+> **AI Agent 协作提示**：修改本目录下的 `.tex`、`generate_figures.py` 或 `references.bib` 前，请先阅读仓库根目录的 [`../AGENTS.md`](../AGENTS.md)、[`../DECISIONS.md`](../DECISIONS.md) 与 [`../VERIFICATION.md`](../VERIFICATION.md)，严格遵守多版本同步、正文页数预算（SC/IPDPS 会议版 **10.0 页正文红线**；DAC 版 **6.0 页正文 + 1 页纯参考文献红线**）及零警告/零 Type-3 字体门禁。
 
 ---
 
@@ -12,6 +12,8 @@
 | :--- | :--- | :--- |
 | `paper_conference.tex` | 主源文件 (Conf) | **IEEE 顶级会议直接投稿版**（`\documentclass[conference]{IEEEtran}`，默认开启双盲匿名 `\anonymoustrue`，正文严格控制在 **10.0 页以内**，第 11 页为均衡双栏参考文献） |
 | `paper_conference.pdf` | 编译成稿 (Conf) | 11 页 US Letter（10 页技术正文 + 1 页均衡参考文献），**0 Warning / 0 Overfull Box / 0 Type-3 字体 / 100% 字体嵌入** |
+| `paper_dac.tex` | 主源文件 (DAC) | **ACM/IEEE DAC 顶级会议直接投稿版**（严格遵循 DAC Research Track **6 页正文 + 最多 1 页纯参考文献**要求，正文 6.0 页整，第 7 页为独立双栏参考文献） |
+| `paper_dac.pdf` | 编译成稿 (DAC) | 7 页 US Letter（6 页完整技术正文 + 1 页纯参考文献），**0 Warning / 0 Overfull Box / 0 Type-3 字体 / 100% 字体嵌入** |
 | `bare_jrnl_new_sample4.tex` | 主源文件 (Journal) | **IEEE Transactions 顶级期刊直接投稿版**（`\documentclass[journal]{IEEEtran}`，含标准页眉 `\markboth`、首字下沉 `\IEEEPARstart` 与单盲/双盲一键切换开关） |
 | `bare_jrnl_new_sample4.pdf` | 编译成稿 (Journal) | IEEE TPDS / IEEE TC 格式直接投稿 PDF，**0 Warning / 0 Overfull Box / 0 Type-3 字体 / 100% 字体嵌入** |
 | `bare_jrnl_new_sample4_v2.txt` | 同步纯文本备份 | 与 `bare_jrnl_new_sample4.tex` 完全同步的纯文本备份（消除旧版草稿遗留问题） |
@@ -24,7 +26,7 @@
 
 ## 2. 双盲评审（Double-Blind）与定稿署名（Camera-Ready）一键切换
 
-两份主源文件（`paper_conference.tex` 与 `bare_jrnl_new_sample4.tex`）顶部第 8–9 行均内置了单行布尔开关：
+三份主源文件（`paper_conference.tex`、`paper_dac.tex` 与 `bare_jrnl_new_sample4.tex`）顶部均内置了单行布尔开关：
 
 ```latex
 \newif\ifanonymous
@@ -32,8 +34,9 @@
 % \anonymousfalse % 切换为定稿 / 单盲投稿模式：取消注释此行并填入真实作者姓名、单位与邮箱
 ```
 
-* **投递 SC / IEEE IPDPS / IEEE CLUSTER / ICPP 双盲审稿**：保持默认 `\anonymoustrue`，直接上传 `paper_conference.pdf`。
-* **投递单盲期刊或录用后 Camera-Ready 定稿**：将第 9 行改为 `\anonymousfalse`，在 `\else ... \fi` 块中填入真实作者与基金致谢信息后重新编译即可。
+* **投递 SC / IEEE IPDPS / IEEE CLUSTER / ICPP 双盲审稿**：保持默认 `\anonymoustrue`，直接上传 `paper_conference.pdf`（10+1 页）。
+* **投递 ACM/IEEE DAC 双盲审稿**：保持默认 `\anonymoustrue`，直接上传 `paper_dac.pdf`（6+1 页，严格契合 DAC 6 页技术正文 + 1 页纯参考文献规定）。
+* **投递单盲期刊或录用后 Camera-Ready 定稿**：将开关行改为 `\anonymousfalse`，在 `\else ... \fi` 块中填入真实作者与基金致谢信息后重新编译即可。
 
 ---
 
@@ -44,7 +47,7 @@
 python generate_figures.py
 ```
 
-### 3.2 编译 IEEE 顶级会议版（`paper_conference.pdf`）
+### 3.2 编译 IEEE 顶级会议版（`paper_conference.pdf`，10+1 页）
 ```powershell
 pdflatex -interaction=nonstopmode paper_conference.tex
 bibtex paper_conference
@@ -52,7 +55,15 @@ pdflatex -interaction=nonstopmode paper_conference.tex
 pdflatex -interaction=nonstopmode paper_conference.tex
 ```
 
-### 3.3 编译 IEEE Transactions 顶级期刊版（`bare_jrnl_new_sample4.pdf`）
+### 3.3 编译 ACM/IEEE DAC 顶级会议版（`paper_dac.pdf`，6+1 页）
+```powershell
+pdflatex -interaction=nonstopmode paper_dac.tex
+bibtex paper_dac
+pdflatex -interaction=nonstopmode paper_dac.tex
+pdflatex -interaction=nonstopmode paper_dac.tex
+```
+
+### 3.4 编译 IEEE Transactions 顶级期刊版（`bare_jrnl_new_sample4.pdf`）
 ```powershell
 pdflatex -interaction=nonstopmode bare_jrnl_new_sample4.tex
 bibtex bare_jrnl_new_sample4

@@ -23,6 +23,7 @@ This repository houses a full-stack HPC systems research project targeting the *
 | **Production DSP Kernel** | `gemm_mpi/device_code/kernel_pipeline.c` | Canonical 14-channel tri-buffered DMA + $4 \times 4$ 32-VR `vec_mula` micro-kernel (`matrix_mul_pipeline_opt`). |
 | **Ablation Baselines** | `gemm_mpi/host_code/gemm_host_AS.c`, `gemm_host_ASR.c`, `device_code/kernel_AS.c`, `benchmark/gemm_openblas_bench.c` | 1D global-broadcast baseline, CPU verification baseline, single/double-buffer DSP ablation kernels, and OpenBLAS benchmark driver. |
 | **Conference Manuscript** | `论文初稿/paper_conference.tex` $\to$ `paper_conference.pdf` | IEEE `[conference]` edition. Default `\anonymoustrue` (double-blind). **Hard limit: Sections I–VII $\le 10.0$ pages** in both anonymous and camera-ready modes. |
+| **DAC Manuscript** | `论文初稿/paper_dac.tex` $\to$ `paper_dac.pdf` | ACM/IEEE DAC edition. Default `\anonymoustrue` (double-blind). **Hard limit: Sections I–VII $\le 6.0$ pages** + 1 page exclusively references (7 pages total). |
 | **Journal Manuscript** | `论文初稿/bare_jrnl_new_sample4.tex` $\to$ `bare_jrnl_new_sample4.pdf` & `bare_jrnl_new_sample4_v2.txt` | IEEE `[journal]` edition (continuous references, balanced final page columns). Always keep `_v2.txt` byte-identical to `.tex`. |
 | **Figure Pipeline** | `论文初稿/generate_figures.py` $\to$ `论文初稿/figures/fig1..fig7.pdf` | Generates all 7 vector PDF figures directly from real experimental measurements with Type-42 TrueType font embedding (`pdf.fonttype = 42`). |
 | **Design Decisions** | `DECISIONS.md` | Architectural & manuscript decision records (`ADR-001`–`ADR-008`). Consult before altering algorithms, tiling, or hardware terminology. |
@@ -61,16 +62,22 @@ Set-Location "论文初稿"
 python generate_figures.py
 ```
 
-### 4.2 Full 4-Pass LaTeX Build (Conference & Journal)
+### 4.2 Full 4-Pass LaTeX Build (Conference, DAC & Journal)
 ```powershell
 Set-Location "论文初稿"
-# 1. IEEE Conference Edition
+# 1. IEEE Conference Edition (10+1 pages)
 pdflatex -interaction=nonstopmode paper_conference.tex
 bibtex paper_conference
 pdflatex -interaction=nonstopmode paper_conference.tex
 pdflatex -interaction=nonstopmode paper_conference.tex
 
-# 2. IEEE Transactions Edition (+ sync _v2.txt)
+# 2. ACM/IEEE DAC Edition (6+1 pages)
+pdflatex -interaction=nonstopmode paper_dac.tex
+bibtex paper_dac
+pdflatex -interaction=nonstopmode paper_dac.tex
+pdflatex -interaction=nonstopmode paper_dac.tex
+
+# 3. IEEE Transactions Edition (+ sync _v2.txt)
 Copy-Item bare_jrnl_new_sample4.tex bare_jrnl_new_sample4_v2.txt -Force
 pdflatex -interaction=nonstopmode bare_jrnl_new_sample4.tex
 bibtex bare_jrnl_new_sample4

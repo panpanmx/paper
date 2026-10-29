@@ -70,3 +70,15 @@ This document records the core hardware-software co-design, distributed algorith
   2. Provide a single-line `\ifanonymous` toggle on line 9 (`\anonymoustrue` default) in both manuscripts.
   3. Order Section V floats sequentially (`Tables I–V`, `Figs. 1–7`), place `\clearpage\IEEEtriggeratref{14}` before References in `paper_conference.tex` (so `Sections I–VII` finish strictly on **Page 10.0** and Page 11 renders symmetric 13-vs-12 References in both anonymous and camera-ready modes), and use continuous `\IEEEtriggeratref{21}` without `\clearpage` in `bare_jrnl_new_sample4.tex` for symmetric Page 11 journal column alignment.
 * **Consequences**: Both manuscripts remain 100% direct-submission ready at all times with zero manual layout rework when switching between conference double-blind review, conference camera-ready, or journal submission.
+
+---
+
+## ADR-009: ACM/IEEE DAC Submission Edition (Strict 6.0-Page Technical Cap + 1 Page References)
+* **Status**: Accepted & Implemented (`论文初稿/paper_dac.tex` $\to$ `paper_dac.pdf`)
+* **Context**: ACM/IEEE Design Automation Conference (DAC) Research Track enforces a hard page limit: **at most 6.0 pages of technical content** (Sections I–VI/VII, figures, tables), plus **up to 1 additional page containing exclusively references** (hard cap: exactly 7 pages total). No technical overflow onto Page 7 is permitted under any circumstances, and review is strictly double-blind (`\anonymoustrue`).
+* **Decision**:
+  1. Create dedicated `paper_dac.tex` sharing `references.bib` and the vector PDF figure suite.
+  2. Condense background and mathematical derivations while maintaining full factual depth and exact metrics across all experimental tables (`Tables I–IV`) and figures (`Figs. 1–5`).
+  3. Ensure Sections I–VII precisely fill Pages 1–6.0 (both columns on Page 6 balanced and ending at $y \approx 698.8\text{ pt}$), with `\clearpage \IEEEtriggeratref{14}` triggering Page 7 containing exclusively the 25 references balanced symmetrically across two columns.
+  4. Enforce 0 Overfull boxes, 0 LaTeX warnings, and 0 Type-3 fonts (100% Type 1 / TrueType embedding).
+* **Consequences**: Establishes a direct-submission ready DAC edition that complies 100% with DAC author instructions, offering an immediate target for submission to EDA and computer architecture tracks.

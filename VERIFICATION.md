@@ -21,9 +21,9 @@ Get-ChildItem "论文初稿\figures\fig*.pdf" | ForEach-Object {
 
 ---
 
-## Gate 2: Four-Variant LaTeX Build, Zero-Warning & Page-Budget Gate
+## Gate 2: Multi-Variant LaTeX Build, Zero-Warning & Page-Budget Gate
 
-Both `paper_conference.tex` and `bare_jrnl_new_sample4.tex` must compile cleanly in **both** `\anonymoustrue` (default double-blind) and `\anonymousfalse` (camera-ready / single-blind) modes, and `bare_jrnl_new_sample4_v2.txt` must stay synchronized with `bare_jrnl_new_sample4.tex`:
+`paper_conference.tex`, `paper_dac.tex`, and `bare_jrnl_new_sample4.tex` must compile cleanly in `\anonymoustrue` (default double-blind) and `\anonymousfalse` (camera-ready / single-blind) modes, and `bare_jrnl_new_sample4_v2.txt` must stay synchronized with `bare_jrnl_new_sample4.tex`:
 
 ```powershell
 $env:Path += ";C:\Users\Administrator\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
@@ -32,7 +32,7 @@ Push-Location "论文初稿"
 # Sync plain-text mirror
 Copy-Item bare_jrnl_new_sample4.tex bare_jrnl_new_sample4_v2.txt -Force
 
-foreach ($stem in @("paper_conference", "bare_jrnl_new_sample4")) {
+foreach ($stem in @("paper_conference", "paper_dac", "bare_jrnl_new_sample4")) {
     pdflatex -interaction=nonstopmode "$stem.tex" | Out-Null
     bibtex $stem | Out-Null
     pdflatex -interaction=nonstopmode "$stem.tex" | Out-Null
@@ -44,6 +44,11 @@ foreach ($stem in @("paper_conference", "bare_jrnl_new_sample4")) {
 }
 Pop-Location
 ```
+
+* **Pass Criteria**:
+  - `paper_conference.pdf`: Exactly 11 pages (Pages 1–10 technical content, Page 11 references); 0 warnings / overfull; 0 Type-3 fonts.
+  - `paper_dac.pdf`: Exactly 7 pages (Pages 1–6 technical content, Page 7 exclusively references); 0 warnings / overfull; 0 Type-3 fonts.
+  - `bare_jrnl_new_sample4.pdf`: Exactly 11 pages; 0 warnings / overfull; 0 Type-3 fonts.
 
 ### Camera-Ready (`\anonymousfalse`) Shadow Test
 Before committing manuscript edits, copy `paper_conference.tex` and `bare_jrnl_new_sample4.tex` to a temporary scratch folder (outside the repo), replace `\anonymoustrue` with `\anonymousfalse`, compile 4 passes, and verify:
