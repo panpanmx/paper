@@ -1,0 +1,161 @@
+# ==========================================================================================
+# MT-3000 DSP (gemm_dsp_AM_SM_pipeline_opt) vs OpenBLAS (FT-2000+ CPU) 性能对比实验日志
+# 实验时间: 2026-10-28
+# 测试规模: 复数双精度浮点矩阵 GEMM (512x512 到 16384x16384)
+# 计算量公式: 8 * M * N * K FLOPs (复数矩阵乘法包含 4 次实数乘法与 2 次实数加法 = 8 次双精度浮点操作/元素)
+# 对比模式:
+#   [Group A: 单核对比] DSP 1 核 (gemm_dsp_AM_SM_pipeline_opt) vs FT2000+ CPU 1 核 (OpenBLAS)
+#   [Group B: 单簇对比] DSP 单簇 24 核 (gemm_dsp_AM_SM_pipeline_opt) vs CPU 单簇等效 4 核 / 整节点 16 核 (OpenBLAS)
+# ==========================================================================================
+
+==========================================================================================
+【实验轮次：Scale 512 x 512】
+  [Matrix Scale: 512 x 512 x 512] (Complex FP64, Total FLOPs = 1.07 GFLOPs)
+  Data Files: ../test_data/realH512.bin | ../test_data/imagH512.bin
+==========================================================================================
+  [Data Load] Loaded binary matrix data in 0.0051 s (Tiles=1, Tile shape=512x512x512)
+
+  --- [Group B: Single Cluster 24 DSP Cores vs 4 CPU Cores (Cluster-Eq) & 16 CPU Cores (Node)] (512x512) ---
+  [DSP 24 Cores] gemm_dsp_AM_SM_pipeline_opt : Time =   0.013260 s | Throughput =    80.98 GFLOPS
+  [CPU  4 Cores] OpenBLAS (4x dgemm)         : Time =   0.046041 s | Throughput =    23.32 GFLOPS | Speedup(DSP24/CPU4)  = 3.47x
+  [CPU 16 Cores] OpenBLAS (4x dgemm)         : Time =   0.062323 s | Throughput =    17.23 GFLOPS | Speedup(DSP24/CPU16) = 4.70x | Speedup(4-Cluster 96DSP/CPU16) = 18.80x
+  [CPU 16 Cores] OpenBLAS (1x zgemm)         : Time =   0.026198 s | Throughput =    40.99 GFLOPS | Speedup(DSP24/CPU16) = 1.98x | Speedup(4-Cluster 96DSP/CPU16) = 7.90x
+
+  --- [Group A: Single Core 1 DSP Core (gemm_dsp_AM_SM_pipeline_opt) vs 1 CPU Core (OpenBLAS)] (512x512) ---
+  [DSP  1 Core ] gemm_dsp_AM_SM_pipeline_opt : Time =   0.024317 s | Throughput =    44.16 GFLOPS
+  [CPU  1 Core ] OpenBLAS (4x dgemm)         : Time =   0.148802 s | Throughput =     7.22 GFLOPS | Speedup(DSP1/CPU1_4dgemm) = 6.12x
+  [CPU  1 Core ] OpenBLAS (1x zgemm)         : Time =   0.151250 s | Throughput =     7.10 GFLOPS | Speedup(DSP1/CPU1_zgemm)  = 6.22x
+
+  [Accuracy Check] Max Diff (DSP gemm_dsp_AM_SM_pipeline_opt vs OpenBLAS): err_x = 7.276e-12, err_y = 1.128e-10
+
+==========================================================================================
+【实验轮次：Scale 1024 x 1024】
+  [Matrix Scale: 1024 x 1024 x 1024] (Complex FP64, Total FLOPs = 8.59 GFLOPs)
+  Data Files: ../test_data/realH1024.bin | ../test_data/imagH1024.bin
+==========================================================================================
+  [Data Load] Loaded binary matrix data in 0.0210 s (Tiles=1, Tile shape=1024x1024x1024)
+
+  --- [Group B: Single Cluster 24 DSP Cores vs 4 CPU Cores (Cluster-Eq) & 16 CPU Cores (Node)] (1024x1024) ---
+  [DSP 24 Cores] gemm_dsp_AM_SM_pipeline_opt : Time =   0.061477 s | Throughput =   139.73 GFLOPS
+  [CPU  4 Cores] OpenBLAS (4x dgemm)         : Time =   0.302699 s | Throughput =    28.38 GFLOPS | Speedup(DSP24/CPU4)  = 4.92x
+  [CPU 16 Cores] OpenBLAS (4x dgemm)         : Time =   0.165568 s | Throughput =    51.88 GFLOPS | Speedup(DSP24/CPU16) = 2.69x | Speedup(4-Cluster 96DSP/CPU16) = 10.77x
+  [CPU 16 Cores] OpenBLAS (1x zgemm)         : Time =   0.104381 s | Throughput =    82.29 GFLOPS | Speedup(DSP24/CPU16) = 1.70x | Speedup(4-Cluster 96DSP/CPU16) = 6.79x
+
+  --- [Group A: Single Core 1 DSP Core (gemm_dsp_AM_SM_pipeline_opt) vs 1 CPU Core (OpenBLAS)] (1024x1024) ---
+  [DSP  1 Core ] gemm_dsp_AM_SM_pipeline_opt : Time =   0.187661 s | Throughput =    45.77 GFLOPS
+  [CPU  1 Core ] OpenBLAS (4x dgemm)         : Time =   1.215307 s | Throughput =     7.07 GFLOPS | Speedup(DSP1/CPU1_4dgemm) = 6.48x
+  [CPU  1 Core ] OpenBLAS (1x zgemm)         : Time =   1.116306 s | Throughput =     7.69 GFLOPS | Speedup(DSP1/CPU1_zgemm)  = 5.95x
+
+  [Accuracy Check] Max Diff (DSP gemm_dsp_AM_SM_pipeline_opt vs OpenBLAS): err_x = 1.728e-11, err_y = 3.274e-10
+
+==========================================================================================
+【实验轮次：Scale 2048 x 2048】
+  [Matrix Scale: 2048 x 2048 x 2048] (Complex FP64, Total FLOPs = 68.72 GFLOPs)
+  Data Files: ../test_data/realH2048.bin | ../test_data/imagH2048.bin
+==========================================================================================
+  [Data Load] Loaded binary matrix data in 0.0974 s (Tiles=1, Tile shape=2048x2048x2048)
+
+  --- [Group B: Single Cluster 24 DSP Cores vs 4 CPU Cores (Cluster-Eq) & 16 CPU Cores (Node)] (2048x2048) ---
+  [DSP 24 Cores] gemm_dsp_AM_SM_pipeline_opt : Time =   0.470821 s | Throughput =   145.96 GFLOPS
+  [CPU  4 Cores] OpenBLAS (4x dgemm)         : Time =   3.009346 s | Throughput =    22.84 GFLOPS | Speedup(DSP24/CPU4)  = 6.39x
+  [CPU 16 Cores] OpenBLAS (4x dgemm)         : Time =   0.797695 s | Throughput =    86.15 GFLOPS | Speedup(DSP24/CPU16) = 1.69x | Speedup(4-Cluster 96DSP/CPU16) = 6.78x
+  [CPU 16 Cores] OpenBLAS (1x zgemm)         : Time =   0.743021 s | Throughput =    92.49 GFLOPS | Speedup(DSP24/CPU16) = 1.58x | Speedup(4-Cluster 96DSP/CPU16) = 6.31x
+
+  --- [Group A: Single Core 1 DSP Core (gemm_dsp_AM_SM_pipeline_opt) vs 1 CPU Core (OpenBLAS)] (2048x2048) ---
+  [DSP  1 Core ] gemm_dsp_AM_SM_pipeline_opt : Time =   1.396888 s | Throughput =    49.19 GFLOPS
+  [CPU  1 Core ] OpenBLAS (4x dgemm)         : Time =  10.106942 s | Throughput =     6.80 GFLOPS | Speedup(DSP1/CPU1_4dgemm) = 7.24x
+  [CPU  1 Core ] OpenBLAS (1x zgemm)         : Time =   9.009536 s | Throughput =     7.63 GFLOPS | Speedup(DSP1/CPU1_zgemm)  = 6.45x
+
+  [Accuracy Check] Max Diff (DSP gemm_dsp_AM_SM_pipeline_opt vs OpenBLAS): err_x = 4.366e-11, err_y = 9.750e-10
+
+==========================================================================================
+【实验轮次：Scale 4096 x 4096】
+  [Matrix Scale: 4096 x 4096 x 4096] (Complex FP64, Total FLOPs = 549.76 GFLOPs)
+  Data Files: ../test_data/realH4096.bin | ../test_data/imagH4096.bin
+==========================================================================================
+  [Data Load] Loaded binary matrix data in 0.7478 s (Tiles=1, Tile shape=4096x4096x4096)
+
+  --- [Group B: Single Cluster 24 DSP Cores vs 4 CPU Cores (Cluster-Eq) & 16 CPU Cores (Node)] (4096x4096) ---
+  [DSP 24 Cores] gemm_dsp_AM_SM_pipeline_opt : Time =   3.176939 s | Throughput =   173.05 GFLOPS
+  [CPU  4 Cores] OpenBLAS (4x dgemm)         : Time =  22.521323 s | Throughput =    24.41 GFLOPS | Speedup(DSP24/CPU4)  = 7.09x
+  [CPU 16 Cores] OpenBLAS (4x dgemm)         : Time =   5.957238 s | Throughput =    92.28 GFLOPS | Speedup(DSP24/CPU16) = 1.88x | Speedup(4-Cluster 96DSP/CPU16) = 7.50x
+  [CPU 16 Cores] OpenBLAS (1x zgemm)         : Time =   6.429474 s | Throughput =    85.51 GFLOPS | Speedup(DSP24/CPU16) = 2.02x | Speedup(4-Cluster 96DSP/CPU16) = 8.10x
+
+  --- [Group A: Single Core 1 DSP Core (gemm_dsp_AM_SM_pipeline_opt) vs 1 CPU Core (OpenBLAS)] (4096x4096) ---
+  [DSP  1 Core ] gemm_dsp_AM_SM_pipeline_opt : Time =  11.360862 s | Throughput =    48.39 GFLOPS
+  [CPU  1 Core ] OpenBLAS (4x dgemm)         : Time =  81.046128 s | Throughput =     6.78 GFLOPS | Speedup(DSP1/CPU1_4dgemm) = 7.13x
+  [CPU  1 Core ] OpenBLAS (1x zgemm)         : Time =  71.047426 s | Throughput =     7.74 GFLOPS | Speedup(DSP1/CPU1_zgemm)  = 6.25x
+
+  [Accuracy Check] Max Diff (DSP gemm_dsp_AM_SM_pipeline_opt vs OpenBLAS): err_x = 7.458e-11, err_y = 2.794e-09
+
+==========================================================================================
+【实验轮次：Scale 8192 x 8192】
+  [Matrix Scale: 8192 x 8192 x 8192] (Complex FP64, Total FLOPs = 4398.05 GFLOPs)
+  Data Files: ../test_data/realH8192.bin | ../test_data/imagH8192.bin
+==========================================================================================
+  [Data Load] Loaded binary matrix data in 2.9775 s (Tiles=1, Tile shape=8192x8192x8192)
+
+  --- [Group B: Single Cluster 24 DSP Cores vs 4 CPU Cores (Cluster-Eq) & 16 CPU Cores (Node)] (8192x8192) ---
+  [DSP 24 Cores] gemm_dsp_AM_SM_pipeline_opt : Time =  18.066365 s | Throughput =   243.44 GFLOPS
+  [CPU  4 Cores] OpenBLAS (4x dgemm)         : Time = 168.633561 s | Throughput =    26.08 GFLOPS | Speedup(DSP24/CPU4)  = 9.33x
+  [CPU 16 Cores] OpenBLAS (4x dgemm)         : Time =  98.708839 s | Throughput =    44.56 GFLOPS | Speedup(DSP24/CPU16) = 5.46x | Speedup(4-Cluster 96DSP/CPU16) = 21.85x
+  [CPU 16 Cores] OpenBLAS (1x zgemm)         : Time =  49.059645 s | Throughput =    89.65 GFLOPS | Speedup(DSP24/CPU16) = 2.72x | Speedup(4-Cluster 96DSP/CPU16) = 10.86x
+
+  --- [Group A: Single Core 1 DSP Core (gemm_dsp_AM_SM_pipeline_opt) vs 1 CPU Core (OpenBLAS)] (8192x8192) ---
+  [DSP  1 Core ] gemm_dsp_AM_SM_pipeline_opt : Time =  89.468385 s | Throughput =    49.16 GFLOPS
+  [CPU  1 Core ] OpenBLAS (4x dgemm)         : Time = 651.011695 s | Throughput =     6.76 GFLOPS | Speedup(DSP1/CPU1_4dgemm) = 7.28x
+  [CPU  1 Core ] OpenBLAS (1x zgemm)         : Time = 578.889693 s | Throughput =     7.60 GFLOPS | Speedup(DSP1/CPU1_zgemm)  = 6.47x
+
+  [Accuracy Check] Max Diff (DSP gemm_dsp_AM_SM_pipeline_opt vs OpenBLAS, verified 67108864 elements): err_x = 1.892e-10, err_y = 7.567e-09
+
+==========================================================================================
+【实验轮次：Scale 16384 x 16384】
+  [Matrix Scale: 16384 x 16384 x 16384] (Complex FP64, Total FLOPs = 35184.37 GFLOPs)
+  Data Files: ../test_data/realH16384.bin | ../test_data/imagH16384.bin
+==========================================================================================
+  [Data Load] Loaded binary matrix data in 12.5919 s (Tiles=4, Tile shape=8192x16384x8192)
+
+  --- [Group B: Single Cluster 24 DSP Cores vs 4 CPU Cores (Cluster-Eq) & 16 CPU Cores (Node)] (16384x16384) ---
+  [DSP 24 Cores] gemm_dsp_AM_SM_pipeline_opt : Time = 176.622926 s | Throughput =   199.21 GFLOPS
+  [CPU  4 Cores] OpenBLAS (4x dgemm)         : Time = 1321.903200 s | Throughput =    26.62 GFLOPS | Speedup(DSP24/CPU4)  = 7.48x
+  [CPU 16 Cores] OpenBLAS (4x dgemm)         : Time = 1159.744826 s | Throughput =    30.34 GFLOPS | Speedup(DSP24/CPU16) = 6.57x | Speedup(4-Cluster 96DSP/CPU16) = 26.26x
+
+  --- [Group A: Single Core 1 DSP Core (gemm_dsp_AM_SM_pipeline_opt) vs 1 CPU Core (OpenBLAS)] (16384x16384) ---
+  [DSP  1 Core ] gemm_dsp_AM_SM_pipeline_opt : Time = 715.780629 s | Throughput =    49.16 GFLOPS
+  [CPU  1 Core ] OpenBLAS (4x dgemm)         : Time = 4887.590806 s | Throughput =     7.20 GFLOPS | Speedup(DSP1/CPU1_4dgemm) = 6.83x
+
+  [Accuracy Check] Max Diff (DSP gemm_dsp_AM_SM_pipeline_opt vs OpenBLAS, verified 67108864 elements): err_x = 1.051e-09, err_y = 2.177e-08
+
+==========================================================================================
+==================================== 实验汇总与性能分析 ====================================
+==========================================================================================
+
+【表 1：Group A 单核性能对比 (1 DSP Core vs 1 CPU Core)】
+| 矩阵规模 (N) | 计算量 (GFLOPs) | DSP 1核 时间(s) | DSP 1核 (GFLOPS) | CPU 1核 时间(s) | CPU 1核 (GFLOPS) | 单核加速比 (DSP1/CPU1) |
+|:------------:|:---------------:|:---------------:|:----------------:|:---------------:|:----------------:|:---------------------:|
+|     512      |       1.07      |     0.0243      |      44.16       |     0.1488      |       7.22       |         6.12x         |
+|     1024     |       8.59      |     0.1877      |      45.77       |     1.2153      |       7.07       |         6.48x         |
+|     2048     |      68.72      |     1.3969      |      49.19       |    10.1069      |       6.80       |         7.24x         |
+|     4096     |     549.76      |    11.3609      |      48.39       |    81.0461      |       6.78       |         7.13x         |
+|     8192     |    4398.05      |    89.4684      |      49.16       |   651.0117      |       6.76       |         7.28x         |
+|    16384     |   35184.37      |   715.7806      |      49.16       |  4887.5908      |       7.20       |         6.83x         |
+
+【表 2：Group B 单簇性能对比 (DSP 单簇 24核 vs CPU 簇等效 4核 / 节点 16核)】
+| 矩阵规模 (N) | DSP 24核 时间(s) | DSP 24核 (GFLOPS) | CPU 4核 时间(s) | CPU 4核 (GFLOPS) | 簇级加速比 (DSP24/CPU4) | CPU 16核 时间(s) | CPU 16核 (GFLOPS) | 整节点等效加速比 (96DSP/CPU16) |
+|:------------:|:----------------:|:-----------------:|:---------------:|:----------------:|:-----------------------:|:----------------:|:-----------------:|:------------------------------:|
+|     512      |      0.0133      |       80.98       |     0.0460      |      23.32       |          3.47x          |      0.0623      |       17.23       |             18.80x             |
+|     1024     |      0.0615      |      139.73       |     0.3027      |      28.38       |          4.92x          |      0.1656      |       51.88       |             10.77x             |
+|     2048     |      0.4708      |      145.96       |     3.0093      |      22.84       |          6.39x          |      0.7977      |       86.15       |              6.78x             |
+|     4096     |      3.1769      |      173.05       |    22.5213      |      24.41       |          7.09x          |      5.9572      |       92.28       |              7.50x             |
+|     8192     |     18.0664      |      243.44       |   168.6336      |      26.08       |          9.33x          |     98.7088      |       44.56       |             21.85x             |
+|    16384     |    176.6229      |      199.21       |  1321.9032      |      26.62       |          7.48x          |   1159.7448      |       30.34       |             26.26x             |
+
+【数值精度校验说明】
+所有规模（512 至 16384）的输出矩阵均与 OpenBLAS 计算结果进行了严格的绝对误差上限检验（Max Diff）：
+- Scale 512:   err_x = 7.276e-12, err_y = 1.128e-10
+- Scale 1024:  err_x = 1.728e-11, err_y = 3.274e-10
+- Scale 2048:  err_x = 4.366e-11, err_y = 9.750e-10
+- Scale 4096:  err_x = 7.458e-11, err_y = 2.794e-09
+- Scale 8192:  err_x = 1.892e-10, err_y = 7.567e-09  (校验全部 67,108,864 复数元素)
+- Scale 16384: err_x = 1.051e-09, err_y = 2.177e-08  (校验 Tile 0 全部 67,108,864 复数元素)
+全部规模误差均保持在 double 精度截断范围内，完全满足数值计算精度要求。

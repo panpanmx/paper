@@ -1,0 +1,41 @@
+# ==========================================
+# LaTeX Temporary Build Files
+# ==========================================
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+!gemm_mpi/benchmark/*.log
+*.out
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
+
+# ==========================================
+# C / MPI / DSP Binaries & Libraries
+# ==========================================
+*.o
+gemm_mpi/bin/gemm_host_*
+gemm_mpi/bin/kernel_AS.dat
+gemm_mpi/bin/lib/
+gemm_mpi/bin/libs/
+gemm_mpi/data/
+gemm_mpi/test_data/
+gemm_mpi/benchmark/gemm_openblas_bench
+
+# ==========================================
+# Editor & OS Temporary Files
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+~$*.xlsx

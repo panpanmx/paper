@@ -1,0 +1,15 @@
+# Binary data and large datasets
+data/
+test_data/
+
+# Compiled objects and binaries
+*.o
+bin/gemm_host_*
+bin/kernel_AS.dat
+bin/lib/
+bin/libs/
+
+# Temporary or editor files
+*.swp
+*~
+.DS_Store
